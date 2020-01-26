@@ -34,6 +34,7 @@ import java.io.InputStreamReader;
 import java.nio.charset.Charset;
 import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -417,4 +418,13 @@ public class TestDefaultHostnameVerifier {
         }
     }
 
+    @Test
+    public void thisTestPassesOn459() throws Exception {
+        List<SubjectName> list = new ArrayList<SubjectName>();
+        list.add(new SubjectName("potato.staging.mycompany.cloud", SubjectName.DNS));
+        list.add(new SubjectName("*.potato.staging.mycompany.cloud", SubjectName.DNS));
+
+        // next line should not throw an exception
+        DefaultHostnameVerifier.matchDNSName("potato.staging.mycompany.cloud", list, publicSuffixMatcher);
+    }
 }
